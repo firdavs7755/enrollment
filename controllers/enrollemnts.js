@@ -1,9 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const controller = express.Router();
-const {Enrollment,validationEnrollment} = require('../models/enrollment')
+const {Enrollment,validationEnrollment,validationFullEnrollment} = require('../models/enrollment')
 const {Course} = require('../models/course')
 const {Customer} = require('../models/customer')
+const {updateCustomer} = require('../services/customerSevice')
+const {updateCourse} = require('../services/cuorseService')
 
 controller.get('/',async (req,res)=>{
   const enrollment = await Enrollment.find().sort('coursePrice');
@@ -48,21 +50,24 @@ controller.post('/',async (req,res)=>{
   res.status(200).send(enrollment);
 });
 controller.delete('/:id', async (req,res)=>{
-    const enrollment = await Enrollment.findById(req.params.id);
+    const enrollment = await Enrollment.findByIdAndRemove(req.params.id);
     if (!enrollment)
       return res.status(404).send('Такой Энроллмент обект не сушествуеть!!!');
     res.status(204).send(enrollment);
-})
+});
+
 // controller.put('/:id',async (req,res)=>{
-//     const {error} = validationEnrollment(req.body);
+//     const {error} = validationFullEnrollment(req.body);
 //     if (error)
 //         return res.status(400).send(error.details[0].message);
-//     // const course = await Course.findById(req.body.courseId)
 //     let enrollemnt = await Enrollment.findByIdAndUpdate(req.params.id,{
 //         coursePrice:req.body.coursePrice,
-//
+//         course:updateCourse(req.body.courseId,req.body,res),
+//         course:updateCustomer(req.body.customerId,req.body,res)
 //     })
-//
+//   if (!enrollemnt)
+//     return res.status(404).send('Такой энроллмент обект не сушествуеть!!!')
+//     res.status(204).send(enrollemnt);
 // })
 
 controller.delete('/:id', async (req,res)=>{
@@ -74,5 +79,14 @@ controller.delete('/:id', async (req,res)=>{
 
 
 module.exports = controller
+
+
+
+
+
+
+
+
+
 
 

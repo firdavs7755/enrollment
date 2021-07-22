@@ -34,8 +34,22 @@ function validationEnrollment(enrollment) {
     coursePrice:Joi.number()
   })
   return schema.validate(enrollment)
+};
+function validationFullEnrollment(enrollment) {
+  const schema = Joi.object({
+    customerId:Joi.string().required(),
+    name:Joi.string(),
+    isVip:Joi.boolean(),
+    phone:Joi.string(),
+    bonusPoints:Joi.number(),
+    courseId:Joi.string().required(),
+    title:Joi.string(),
+    coursePrice:Joi.number()
+  })
+  return schema.validate(enrollment)
 }
 const Enrollment = mongoose.model('Enrollment',enrollmentSchema);
 
 exports.Enrollment = Enrollment;
+exports.validationFullEnrollment = validationFullEnrollment;
 exports.validationEnrollment = validationEnrollment;
